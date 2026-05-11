@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MTA:SA — Editor de Íconos RP</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0d0f14;
+    --surface: #161922;
+    --surface2: #1e2330;
+    --border: #2a3045;
+    --accent: #3b82f6;
+    --accent2: #60a5fa;
+    --text: #e2e8f0;
+    --muted: #64748b;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  header {
+    padding: 18px 32px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--surface);
+  }
+
+  header .logo {
+    width: 36px; height: 36px;
+    background: var(--accent);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+
+  header h1 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 22px;
+    letter-spacing: 1px;
+    color: #fff;
+  }
+
+  header span {
+    color: var(--muted);
+    font-size: 13px;
+    margin-left: 4px;
+  }
+
+  .workspace {
+    display: grid;
+    grid-template-columns: 280px 1fr 260px;
+    flex: 1;
+    height: calc(100vh - 65px);
+  }
+
+  /* LEFT PANEL */
+  .panel {
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    padding: 20px 16px;
+  }
+
+  .panel-title {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  .icon-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+
+  .icon-btn {
+    aspect-ratio: 1;
+    background: var(--surface2);
+    border: 2px solid transparent;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    transition: all .15s;
+    color: var(--text);
+  }
+
+  .icon-btn:hover { border-color: var(--accent); background: #1e2a3d; }
+  .icon-btn.active { border-color: var(--accent); background: #1e3a5f; }
+
+  .section { margin-bottom: 22px; }
+
+  label {
+    font-size: 12px;
+    color: var(--muted);
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  input[type=range] {
+    width: 100%;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+
+  input[type=color] {
+    width: 100%;
+    height: 36px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface2);
+    cursor: pointer;
+    padding: 2px 4px;
+  }
+
+  .color-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .shape-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .shape-btn {
+    padding: 8px 4px;
+    background: var(--surface2);
+    border: 2px solid transparent;
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    transition: all .15s;
+  }
+
+  .shape-btn:hover { border-color: var(--accent); }
+  .shape-btn.active { border-color: var(--accent); background: #1e3a5f; color: var(--accent2); }
+
+  /* CENTER */
+  .canvas-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    gap: 24px;
+    padding: 32px;
+    position: relative;
+  }
+
+  .canvas-area::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 40px 40px;
+    opacity: .3;
+    pointer-events: none;
+  }
+
+  #previewCanvas {
+    border-radius: 16px;
+    box-shadow: 0 0 60px rgba(59,130,246,.2), 0 0 0 1px var(--border);
+    position: relative;
+    z-index: 1;
+  }
+
+  .preview-label {
+    font-size: 12px;
+    color: var(--muted);
+    z-index: 1;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .preview-sizes {
+    display: flex;
+    gap: 32px;
+    align-items: flex-end;
+    z-index: 1;
+  }
+
+  .size-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .size-preview span {
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  /* RIGHT PANEL */
+  .right-panel {
+    background: var(--surface);
+    border-left: 1px solid var(--border);
+    padding: 20px 16px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .download-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--accent);
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: background .15s;
+  }
+
+  .download-btn:hover { background: #2563eb; }
+  .download-btn.secondary {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-size: 14px;
+    margin-top: 8px;
+  }
+  .download-btn.secondary:hover { background: var(--border); }
+
+  .code-box {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: #7dd3fc;
+    white-space: pre;
+    overflow-x: auto;
+    line-height: 1.7;
+  }
+
+  .tag {
+    display: inline-block;
+    background: #1e3a5f;
+    color: var(--accent2);
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 4px 0;
+  }
+
+  .preset-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .preset-btn {
+    padding: 8px 4px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    transition: border-color .15s;
+  }
+
+  .preset-btn:hover { border-color: var(--accent); }
+  .preset-btn span { font-size: 10px; color: var(--muted); }
+  .preset-dot {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+  }
+
+  input[type=text] {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    padding: 8px 10px;
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+  }
+
+  input[type=text]:focus { border-color: var(--accent); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">🗺️</div>
+  <h1>MTA:SA ICON EDITOR <span>— RP Markers</span></h1>
+</header>
+
+<div class="workspace">
+
+  <!-- LEFT: Icon picker + settings -->
+  <div class="panel">
+    <div class="panel-title">Ícono</div>
+    <div class="icon-grid" id="iconGrid">
+      <!-- filled by JS -->
+    </div>
+
+    <div class="section">
+      <div class="panel-title">Forma del fondo</div>
+      <div class="shape-row">
+        <div class="shape-btn active" data-shape="shield" onclick="setShape('shield',this)">🛡 Escudo</div>
+        <div class="shape-btn" data-shape="circle" onclick="setShape('circle',this)">⬤ Círculo</div>
+        <div class="shape-btn" data-shape="hexagon" onclick="setShape('hexagon',this)">⬡ Hex</div>
+        <div class="shape-btn" data-shape="square" onclick="setShape('square',this)">■ Cuadro</div>
+        <div class="shape-btn" data-shape="diamond" onclick="setShape('diamond',this)">◆ Rombo</div>
+        <div class="shape-btn" data-shape="pentagon" onclick="setShape('pentagon',this)">⬠ Penta</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="panel-title">Colores</div>
+      <div class="color-row">
+        <div>
+          <label>Fondo</label>
+          <input type="color" id="bgColor" value="#1a6fd4" oninput="render()"/>
+        </div>
+        <div>
+          <label>Borde</label>
+          <input type="color" id="borderColor" value="#ffffff" oninput="render()"/>
+        </div>
+      </div>
+      <div style="margin-top:10px">
+        <label>Ícono</label>
+        <input type="color" id="iconColor" value="#ffffff" oninput="render()"/>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="panel-title">Presets de color</div>
+      <div class="preset-row" id="presetRow"></div>
+    </div>
+
+    <div class="section">
+      <label>Tamaño del ícono: <span id="iconSizeVal">60</span>%</label>
+      <input type="range" id="iconSize" min="30" max="80" value="60" oninput="document.getElementById('iconSizeVal').textContent=this.value;render()"/>
+    </div>
+
+    <div class="section">
+      <label>Grosor del borde: <span id="borderWVal">4</span>px</label>
+      <input type="range" id="borderW" min="0" max="12" value="4" oninput="document.getElementById('borderWVal').textContent=this.value;render()"/>
+    </div>
+
+    <div class="section">
+      <label>Texto opcional</label>
+      <input type="text" id="labelText" placeholder="Ej: Hospital" oninput="render()" maxlength="12"/>
+    </div>
+  </div>
+
+  <!-- CENTER: Canvas preview -->
+  <div class="canvas-area">
+    <div class="preview-label">Vista previa</div>
+    <div class="preview-sizes">
+      <div class="size-preview">
+        <canvas id="previewCanvas" width="200" height="200"></canvas>
+        <span>200 × 200 (export)</span>
+      </div>
+      <div class="size-preview">
+        <canvas id="smallCanvas" width="80" height="80"></canvas>
+        <span>Tamaño en juego</span>
+      </div>
+      <div class="size-preview">
+        <canvas id="tinyCanvas" width="40" height="40"></canvas>
+        <span>Radar</span>
+      </div>
+    </div>
+    <div class="preview-label" style="margin-top:8px">↑ Así se verá a distintas distancias</div>
+  </div>
+
+  <!-- RIGHT: Download + code -->
+  <div class="right-panel">
+    <div>
+      <div class="panel-title">Exportar</div>
+      <button class="download-btn" onclick="downloadPNG()">⬇ Descargar PNG (200×200)</button>
+      <button class="download-btn secondary" onclick="downloadAll()">⬇ Descargar pack 3 tamaños</button>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="panel-title">Código Lua generado</div>
+      <div class="tag">client.lua</div>
+      <div class="code-box" id="codeBox"></div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div>
+      <div class="panel-title">meta.xml</div>
+      <div class="tag">meta.xml</div>
+      <div class="code-box" id="metaBox"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const ICONS = [
+  { e: '🏠', l: 'Casa' },
+  { e: '🚲', l: 'Bici' },
+  { e: '🏥', l: 'Hospital' },
+  { e: '🚔', l: 'Policía' },
+  { e: '🔧', l: 'Mecánico' },
+  { e: '🏦', l: 'Banco' },
+  { e: '🛒', l: 'Tienda' },
+  { e: '🍔', l: 'Comida' },
+  { e: '⛽', l: 'Gasolinera' },
+  { e: '✈️', l: 'Aeropuerto' },
+  { e: '🎯', l: 'Misión' },
+  { e: '💼', l: 'Trabajo' },
+  { e: '🎰', l: 'Casino' },
+  { e: '🏋️', l: 'Gym' },
+  { e: '🚗', l: 'Concesion.' },
+  { e: '⭐', l: 'Especial' },
+  { e: '📦', l: 'Almacén' },
+  { e: '🔑', l: 'Acceso' },
+  { e: '💊', l: 'Farmacia' },
+  { e: '🎪', l: 'Evento' },
+];
+
+const PRESETS = [
+  { bg: '#1a6fd4', border: '#ffffff', icon: '#ffffff', name: 'Azul RP' },
+  { bg: '#16a34a', border: '#ffffff', icon: '#ffffff', name: 'Verde' },
+  { bg: '#dc2626', border: '#ffffff', icon: '#ffffff', name: 'Rojo' },
+  { bg: '#7c3aed', border: '#d4b8ff', icon: '#ffffff', name: 'Morado' },
+  { bg: '#b45309', border: '#fef3c7', icon: '#ffffff', name: 'Dorado' },
+  { bg: '#0f172a', border: '#38bdf8', icon: '#38bdf8', name: 'Neon' },
+];
+
+let currentIcon = ICONS[0];
+let currentShape = 'shield';
+
+// Build icon grid
+const grid = document.getElementById('iconGrid');
+ICONS.forEach((ic, i) => {
+  const btn = document.createElement('div');
+  btn.className = 'icon-btn' + (i === 0 ? ' active' : '');
+  btn.title = ic.l;
+  btn.textContent = ic.e;
+  btn.onclick = () => {
+    document.querySelectorAll('.icon-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentIcon = ic;
+    render();
+  };
+  grid.appendChild(btn);
+});
+
+// Build presets
+const pr = document.getElementById('presetRow');
+PRESETS.forEach(p => {
+  const btn = document.createElement('div');
+  btn.className = 'preset-btn';
+  btn.innerHTML = `<div class="preset-dot" style="background:${p.bg};border:2px solid ${p.border}"></div><span>${p.name}</span>`;
+  btn.onclick = () => {
+    document.getElementById('bgColor').value = p.bg;
+    document.getElementById('borderColor').value = p.border;
+    document.getElementById('iconColor').value = p.icon;
+    render();
+  };
+  pr.appendChild(btn);
+});
+
+function setShape(s, el) {
+  currentShape = s;
+  document.querySelectorAll('.shape-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  render();
+}
+
+function drawShape(ctx, size, shape, bg, border, borderW) {
+  const half = size / 2;
+  const inset = borderW / 2;
+
+  ctx.beginPath();
+
+  if (shape === 'shield') {
+    const w = size - inset * 2;
+    const h = size - inset * 2;
+    const x = inset, y = inset;
+    const r = w * 0.18;
+    // Shield: rounded top corners, pointed bottom
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h * 0.55);
+    ctx.quadraticCurveTo(x + w, y + h * 0.78, x + w / 2, y + h);
+    ctx.quadraticCurveTo(x, y + h * 0.78, x, y + h * 0.55);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+  } else if (shape === 'circle') {
+    ctx.arc(half, half, half - inset, 0, Math.PI * 2);
+  } else if (shape === 'hexagon') {
+    for (let i = 0; i < 6; i++) {
+      const a = Math.PI / 180 * (60 * i - 30);
+      const x = half + (half - inset) * Math.cos(a);
+      const y = half + (half - inset) * Math.sin(a);
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+  } else if (shape === 'square') {
+    const r2 = size * 0.12;
+    ctx.roundRect(inset, inset, size - inset * 2, size - inset * 2, r2);
+  } else if (shape === 'diamond') {
+    ctx.moveTo(half, inset);
+    ctx.lineTo(size - inset, half);
+    ctx.lineTo(half, size - inset);
+    ctx.lineTo(inset, half);
+    ctx.closePath();
+  } else if (shape === 'pentagon') {
+    for (let i = 0; i < 5; i++) {
+      const a = Math.PI / 180 * (72 * i - 90);
+      const x = half + (half - inset) * Math.cos(a);
+      const y = half + (half - inset) * Math.sin(a);
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+  }
+
+  ctx.fillStyle = bg;
+  ctx.fill();
+
+  if (borderW > 0) {
+    ctx.strokeStyle = border;
+    ctx.lineWidth = borderW;
+    ctx.stroke();
+  }
+}
+
+function renderToCanvas(canvas) {
+  const size = canvas.width;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, size, size);
+
+  const bg = document.getElementById('bgColor').value;
+  const border = document.getElementById('borderColor').value;
+  const iconColor = document.getElementById('iconColor').value;
+  const iconPct = parseInt(document.getElementById('iconSize').value) / 100;
+  const borderW = parseInt(document.getElementById('borderW').value) * (size / 200);
+  const label = document.getElementById('labelText').value;
+
+  // Shadow
+  ctx.save();
+  ctx.shadowColor = 'rgba(0,0,0,0.4)';
+  ctx.shadowBlur = size * 0.08;
+  ctx.shadowOffsetY = size * 0.04;
+  drawShape(ctx, size, currentShape, bg, border, borderW);
+  ctx.restore();
+
+  // Draw icon emoji
+  const iconSize = size * iconPct;
+  const offsetY = label ? -size * 0.06 : 0;
+
+  // For colored icon, we use fillText with a colored rect trick
+  ctx.save();
+  ctx.font = `${iconSize}px serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
+  // Draw emoji
+  const emojiY = currentShape === 'shield'
+    ? size * 0.42 + offsetY
+    : size * 0.50 + offsetY;
+
+  ctx.fillText(currentIcon.e, size / 2, emojiY);
+  ctx.restore();
+
+  // Label text
+  if (label) {
+    const fontSize = Math.max(size * 0.1, 10);
+    ctx.save();
+    ctx.font = `bold ${fontSize}px Inter, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = iconColor;
+    const labelY = currentShape === 'shield' ? size * 0.76 : size * 0.78;
+    ctx.fillText(label.toUpperCase(), size / 2, labelY);
+    ctx.restore();
+  }
+}
+
+function render() {
+  renderToCanvas(document.getElementById('previewCanvas'));
+  renderToCanvas(document.getElementById('smallCanvas'));
+  renderToCanvas(document.getElementById('tinyCanvas'));
+  updateCode();
+}
+
+function updateCode() {
+  const label = document.getElementById('labelText').value || 'miMarker';
+  const safe = label.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '') || 'marker';
+
+  document.getElementById('codeBox').textContent =
+`-- ikon_${safe}.lua (client-side)
+local img = dxCreateTexture(
+    "icons/icon_${safe}.png"
+)
+
+local pos = {x=0, y=0, z=0}
+-- ^ Cambia por tus coords
+
+addEventHandler("onClientRender",
+  root, function()
+    local px,py,pz =
+      getElementPosition(
+        localPlayer)
+    local dist = getDistanceBetweenPoints3D(
+      px,py,pz,
+      pos.x,pos.y,pos.z)
+
+    if dist < 30 then
+      local sx = pos.x
+      local sy = pos.y
+      local sz = pos.z + 1.8
+      dxDrawMaterialLine3D(
+        sx-0.5, sy, sz,
+        sx+0.5, sy, sz,
+        img, 1.2,
+        tocolor(255,255,255,255)
+      )
+    end
+  end
+)`;
+
+  document.getElementById('metaBox').textContent =
+`<meta>
+  <script src="client.lua"
+    type="client"/>
+  <file src="icons/icon_${safe}.png"/>
+</meta>`;
+}
+
+function downloadPNG() {
+  const c = document.getElementById('previewCanvas');
+  const a = document.createElement('a');
+  const label = document.getElementById('labelText').value || 'icon';
+  const safe = label.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '') || 'icon';
+  a.download = `icon_${safe}.png`;
+  a.href = c.toDataURL('image/png');
+  a.click();
+}
+
+function downloadAll() {
+  const sizes = [200, 128, 64];
+  sizes.forEach((s, i) => {
+    const c = document.createElement('canvas');
+    c.width = s; c.height = s;
+    renderToCanvas(c);
+    const a = document.createElement('a');
+    const label = document.getElementById('labelText').value || 'icon';
+    const safe = label.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '') || 'icon';
+    a.download = `icon_${safe}_${s}.png`;
+    a.href = c.toDataURL('image/png');
+    setTimeout(() => a.click(), i * 300);
+  });
+}
+
+render();
+</script>
+
+</body>
+</html>
