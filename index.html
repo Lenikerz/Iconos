@@ -1,705 +1,1595 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>MTA:SA — Editor de Íconos RP</title>
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MTA:SA Icon Studio — Pro</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+    <style>
+        :root {
+            --bg: #06070a;
+            --surface: #0f111a;
+            --surface2: #161926;
+            --border: rgba(255, 255, 255, 0.08);
+            --border2: rgba(255, 255, 255, 0.15);
+            --accent: #3b82f6;
+            --accent2: #8b5cf6;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --r-lg: 16px;
+            --r-md: 12px;
+            --r-sm: 8px;
+        }
 
-  :root {
-    --bg: #0d0f14;
-    --surface: #161922;
-    --surface2: #1e2330;
-    --border: #2a3045;
-    --accent: #3b82f6;
-    --accent2: #60a5fa;
-    --text: #e2e8f0;
-    --muted: #64748b;
-  }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Inter', sans-serif;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Outfit', sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
 
-  header {
-    padding: 18px 32px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    background: var(--surface);
-  }
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
 
-  header .logo {
-    width: 36px; height: 36px;
-    background: var(--accent);
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px;
-  }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border2);
+            border-radius: 10px;
+        }
 
-  header h1 {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 22px;
-    letter-spacing: 1px;
-    color: #fff;
-  }
+        /* HEADER */
+        header {
+            height: 56px;
+            padding: 0 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--surface);
+            flex-shrink: 0;
+        }
 
-  header span {
-    color: var(--muted);
-    font-size: 13px;
-    margin-left: 4px;
-  }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-  .workspace {
-    display: grid;
-    grid-template-columns: 280px 1fr 260px;
-    flex: 1;
-    height: calc(100vh - 65px);
-  }
+        .logo {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 16px rgba(59, 130, 246, .4);
+        }
 
-  /* LEFT PANEL */
-  .panel {
-    background: var(--surface);
-    border-right: 1px solid var(--border);
-    overflow-y: auto;
-    padding: 20px 16px;
-  }
+        .logo svg {
+            width: 16px;
+            height: 16px;
+            stroke: #fff;
+            fill: none;
+            stroke-width: 2.5;
+        }
 
-  .panel-title {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 2px;
-    color: var(--muted);
-    text-transform: uppercase;
-    margin-bottom: 14px;
-  }
+        header h1 {
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: -.3px;
+        }
 
-  .icon-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-    margin-bottom: 24px;
-  }
+        .badge {
+            font-size: 10px;
+            background: var(--border);
+            padding: 2px 7px;
+            border-radius: 20px;
+            color: var(--muted);
+            font-weight: 600;
+        }
 
-  .icon-btn {
-    aspect-ratio: 1;
-    background: var(--surface2);
-    border: 2px solid transparent;
-    border-radius: 10px;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 22px;
-    transition: all .15s;
-    color: var(--text);
-  }
+        .btn-reset {
+            padding: 6px 14px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: var(--r-sm);
+            color: var(--text);
+            font-family: 'Outfit', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background .15s;
+        }
 
-  .icon-btn:hover { border-color: var(--accent); background: #1e2a3d; }
-  .icon-btn.active { border-color: var(--accent); background: #1e3a5f; }
+        .btn-reset:hover {
+            background: var(--border);
+        }
 
-  .section { margin-bottom: 22px; }
+        .btn-reset svg {
+            width: 12px;
+            height: 12px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2.5;
+        }
 
-  label {
-    font-size: 12px;
-    color: var(--muted);
-    display: block;
-    margin-bottom: 6px;
-  }
+        /* LAYOUT */
+        .workspace {
+            display: grid;
+            grid-template-columns: 290px 1fr 310px;
+            flex: 1;
+            height: calc(100vh - 56px);
+            overflow: hidden;
+        }
 
-  input[type=range] {
-    width: 100%;
-    accent-color: var(--accent);
-    cursor: pointer;
-  }
+        /* SIDEBARS */
+        .sidebar {
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
 
-  input[type=color] {
-    width: 100%;
-    height: 36px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    background: var(--surface2);
-    cursor: pointer;
-    padding: 2px 4px;
-  }
+        .sidebar.right {
+            border-right: none;
+            border-left: 1px solid var(--border);
+        }
 
-  .color-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
+        .section {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+        }
 
-  .shape-row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-  }
+        .sec-title {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--muted);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
 
-  .shape-btn {
-    padding: 8px 4px;
-    background: var(--surface2);
-    border: 2px solid transparent;
-    border-radius: 8px;
-    color: var(--text);
-    font-size: 11px;
-    font-weight: 600;
-    cursor: pointer;
-    text-align: center;
-    transition: all .15s;
-  }
+        .sec-title svg {
+            width: 11px;
+            height: 11px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2.5;
+        }
 
-  .shape-btn:hover { border-color: var(--accent); }
-  .shape-btn.active { border-color: var(--accent); background: #1e3a5f; color: var(--accent2); }
+        /* SEARCH */
+        .search-box input {
+            width: 100%;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--r-sm);
+            padding: 7px 10px;
+            color: var(--text);
+            font-family: 'Outfit', sans-serif;
+            font-size: 12px;
+            outline: none;
+            transition: border-color .2s;
+            margin-bottom: 10px;
+        }
 
-  /* CENTER */
-  .canvas-area {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background: var(--bg);
-    gap: 24px;
-    padding: 32px;
-    position: relative;
-  }
+        .search-box input:focus {
+            border-color: var(--accent);
+        }
 
-  .canvas-area::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(var(--border) 1px, transparent 1px),
-      linear-gradient(90deg, var(--border) 1px, transparent 1px);
-    background-size: 40px 40px;
-    opacity: .3;
-    pointer-events: none;
-  }
+        /* ICON GRID */
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 4px;
+            max-height: 240px;
+            overflow-y: auto;
+            padding-right: 2px;
+        }
 
-  #previewCanvas {
-    border-radius: 16px;
-    box-shadow: 0 0 60px rgba(59,130,246,.2), 0 0 0 1px var(--border);
-    position: relative;
-    z-index: 1;
-  }
+        .icon-grid::-webkit-scrollbar {
+            width: 3px;
+        }
 
-  .preview-label {
-    font-size: 12px;
-    color: var(--muted);
-    z-index: 1;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-  }
+        .icon-item {
+            height: 56px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--r-sm);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all .2s;
+            font-size: 14px;
+            gap: 2px;
+        }
 
-  .preview-sizes {
-    display: flex;
-    gap: 32px;
-    align-items: flex-end;
-    z-index: 1;
-  }
+        .icon-item span:first-child {
+            font-size: 20px; /* Tamaño optimizado para 56px de alto */
+        }
 
-  .size-preview {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-  }
+        .icon-item span:last-child {
+            font-size: 8px;
+            color: var(--muted);
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            max-width: 100%;
+            padding: 0 4px;
+        }
 
-  .size-preview span {
-    font-size: 11px;
-    color: var(--muted);
-  }
+        .icon-item i {
+            width: 18px;
+            height: 18px;
+        }
 
-  /* RIGHT PANEL */
-  .right-panel {
-    background: var(--surface);
-    border-left: 1px solid var(--border);
-    padding: 20px 16px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-  }
+        .icon-item:hover {
+            border-color: var(--accent);
+            transform: translateY(-1px);
+            background: var(--surface2);
+        }
 
-  .download-btn {
-    width: 100%;
-    padding: 12px;
-    background: var(--accent);
-    border: none;
-    border-radius: 10px;
-    color: #fff;
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 16px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    cursor: pointer;
-    transition: background .15s;
-  }
+        .icon-item.active {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            border-color: transparent;
+            box-shadow: 0 3px 10px rgba(59, 130, 246, .3);
+        }
 
-  .download-btn:hover { background: #2563eb; }
-  .download-btn.secondary {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    color: var(--text);
-    font-size: 14px;
-    margin-top: 8px;
-  }
-  .download-btn.secondary:hover { background: var(--border); }
+        .icon-item.active span {
+            color: rgba(255, 255, 255, .8);
+        }
 
-  .code-box {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 14px;
-    font-family: 'Courier New', monospace;
-    font-size: 11px;
-    color: #7dd3fc;
-    white-space: pre;
-    overflow-x: auto;
-    line-height: 1.7;
-  }
+        /* SHAPE GRID */
+        .shape-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            max-height: 180px;
+            overflow-y: auto;
+            padding-right: 2px;
+        }
 
-  .tag {
-    display: inline-block;
-    background: #1e3a5f;
-    color: var(--accent2);
-    font-size: 10px;
-    font-weight: 600;
-    padding: 2px 8px;
-    border-radius: 20px;
-    letter-spacing: 1px;
-    margin-bottom: 6px;
-  }
+        .shape-btn {
+            height: 52px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--r-sm);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all .2s;
+            gap: 3px;
+        }
 
-  .divider {
-    height: 1px;
-    background: var(--border);
-    margin: 4px 0;
-  }
+        .shape-btn svg {
+            width: 18px;
+            height: 18px;
+        }
 
-  .preset-row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-  }
+        .shape-btn span {
+            font-size: 8px;
+            color: var(--muted);
+            font-weight: 500;
+            text-align: center;
+            line-height: 1;
+        }
 
-  .preset-btn {
-    padding: 8px 4px;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    background: var(--surface2);
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    transition: border-color .15s;
-  }
+        .shape-btn:hover {
+            border-color: var(--accent);
+            transform: translateY(-1px);
+            background: var(--surface2);
+        }
 
-  .preset-btn:hover { border-color: var(--accent); }
-  .preset-btn span { font-size: 10px; color: var(--muted); }
-  .preset-dot {
-    width: 20px; height: 20px;
-    border-radius: 50%;
-  }
+        .shape-btn.active {
+            border-color: var(--accent);
+            background: rgba(59, 130, 246, .12);
+        }
 
-  input[type=text] {
-    width: 100%;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    color: var(--text);
-    padding: 8px 10px;
-    font-size: 13px;
-    font-family: 'Inter', sans-serif;
-    outline: none;
-  }
+        .shape-btn.active span {
+            color: var(--accent);
+        }
 
-  input[type=text]:focus { border-color: var(--accent); }
-</style>
+        /* CONTROLS */
+        .ctrl {
+            margin-bottom: 14px;
+        }
+
+        .ctrl-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--muted);
+            margin-bottom: 6px;
+        }
+
+        .ctrl-label b {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        input[type=range] {
+            width: 100%;
+            height: 4px;
+            background: var(--border2);
+            border-radius: 2px;
+            appearance: none;
+            outline: none;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            appearance: none;
+            width: 13px;
+            height: 13px;
+            background: #fff;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 8px rgba(0, 0, 0, .5);
+            transition: transform .1s;
+        }
+
+        input[type=range]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        .colors-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .clr-wrap {
+            position: relative;
+            height: 36px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--r-sm);
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .clr-wrap input[type=color] {
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            width: 115%;
+            height: 115%;
+            cursor: pointer;
+            border: none;
+        }
+
+        .toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .toggle-row label.lbl {
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .sw {
+            position: relative;
+            display: inline-block;
+            width: 34px;
+            height: 18px;
+        }
+
+        .sw input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .sw .tr {
+            position: absolute;
+            cursor: pointer;
+            inset: 0;
+            background: var(--border2);
+            border-radius: 18px;
+            transition: .3s;
+        }
+
+        .sw .tr:before {
+            content: "";
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            left: 3px;
+            bottom: 3px;
+            background: #fff;
+            border-radius: 50%;
+            transition: .3s;
+        }
+
+        .sw input:checked+.tr {
+            background: var(--accent);
+        }
+
+        .sw input:checked+.tr:before {
+            transform: translateX(16px);
+        }
+
+        input[type=text] {
+            width: 100%;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--r-sm);
+            padding: 7px 10px;
+            color: var(--text);
+            font-family: 'Outfit', sans-serif;
+            font-size: 12px;
+            outline: none;
+        }
+
+        input[type=text]:focus {
+            border-color: var(--accent);
+        }
+
+        /* CENTER */
+        .canvas-area {
+            background: radial-gradient(circle at center, #11141d, #06070a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .grid-bg {
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(var(--border2) 1px, transparent 1px);
+            background-size: 30px 30px;
+            opacity: .4;
+            pointer-events: none;
+        }
+
+        .live-badge {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: rgba(0, 0, 0, .6);
+            backdrop-filter: blur(8px);
+            padding: 6px 14px;
+            border-radius: 30px;
+            border: 1px solid var(--border);
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            color: #4ade80;
+        }
+
+        .dot {
+            width: 7px;
+            height: 7px;
+            background: #4ade80;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.5);
+                opacity: .5;
+            }
+        }
+
+        #mainCanvas {
+            border-radius: 20px;
+            box-shadow: 0 16px 50px rgba(0, 0, 0, .6), 0 0 0 1px var(--border);
+            position: relative;
+            z-index: 2;
+        }
+
+        /* RIGHT PANEL */
+        .btn-dl {
+            width: 100%;
+            padding: 11px;
+            border-radius: var(--r-md);
+            border: none;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            transition: all .2s;
+        }
+
+        .btn-dl svg {
+            width: 14px;
+            height: 14px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2.5;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: #fff;
+            box-shadow: 0 4px 14px rgba(59, 130, 246, .35);
+            margin-bottom: 8px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, .5);
+        }
+
+        .btn-secondary {
+            background: var(--surface2);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+
+        .code-block {
+            background: #040508;
+            border: 1px solid var(--border);
+            border-radius: var(--r-md);
+            margin-top: 12px;
+        }
+
+        .code-head {
+            padding: 7px 12px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .code-head span {
+            font-size: 10px;
+            color: var(--muted);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .code-body {
+            padding: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: #9cdcfe;
+            white-space: pre;
+            overflow-x: auto;
+            max-height: 220px;
+            line-height: 1.65;
+        }
+
+        .copy-btn {
+            background: transparent;
+            border: none;
+            color: var(--muted);
+            cursor: pointer;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .copy-btn:hover {
+            color: var(--text);
+            background: var(--border);
+        }
+
+        .copy-btn svg {
+            width: 12px;
+            height: 12px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2.5;
+        }
+
+        .dim-row {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .dim-row span {
+            font-size: 10px;
+            color: var(--muted);
+            text-align: center;
+        }
+
+        .dim-row input {
+            width: 100%;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--r-sm);
+            padding: 6px 8px;
+            color: var(--text);
+            font-family: 'Outfit', sans-serif;
+            font-size: 12px;
+            outline: none;
+            text-align: center;
+        }
+
+        .cat-tabs {
+            display: flex;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--r-sm);
+            padding: 3px;
+            margin-bottom: 12px;
+        }
+
+        .cat-tab {
+            flex: 1;
+            padding: 5px;
+            font-size: 10px;
+            font-weight: 700;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 5px;
+            color: var(--muted);
+            text-transform: uppercase;
+            transition: all .2s;
+        }
+
+        .cat-tab.active {
+            background: var(--surface2);
+            color: var(--accent);
+        }
+
+        .icon-item.lucide-mode {
+            font-size: 14px;
+            color: var(--muted);
+        }
+
+        .icon-item.lucide-mode.active {
+            color: #fff;
+        }
+    </style>
 </head>
+
 <body>
 
-<header>
-  <div class="logo">🗺️</div>
-  <h1>MTA:SA ICON EDITOR <span>— RP Markers</span></h1>
-</header>
-
-<div class="workspace">
-
-  <!-- LEFT: Icon picker + settings -->
-  <div class="panel">
-    <div class="panel-title">Ícono</div>
-    <div class="icon-grid" id="iconGrid">
-      <!-- filled by JS -->
-    </div>
-
-    <div class="section">
-      <div class="panel-title">Forma del fondo</div>
-      <div class="shape-row">
-        <div class="shape-btn active" data-shape="shield" onclick="setShape('shield',this)">🛡 Escudo</div>
-        <div class="shape-btn" data-shape="circle" onclick="setShape('circle',this)">⬤ Círculo</div>
-        <div class="shape-btn" data-shape="hexagon" onclick="setShape('hexagon',this)">⬡ Hex</div>
-        <div class="shape-btn" data-shape="square" onclick="setShape('square',this)">■ Cuadro</div>
-        <div class="shape-btn" data-shape="diamond" onclick="setShape('diamond',this)">◆ Rombo</div>
-        <div class="shape-btn" data-shape="pentagon" onclick="setShape('pentagon',this)">⬠ Penta</div>
-      </div>
-    </div>
-
-    <div class="section">
-      <div class="panel-title">Colores</div>
-      <div class="color-row">
-        <div>
-          <label>Fondo</label>
-          <input type="color" id="bgColor" value="#1a6fd4" oninput="render()"/>
+    <header>
+        <div class="brand">
+            <div class="logo"><svg viewBox="0 0 24 24">
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
+                    <circle cx="12" cy="9" r="2.5" />
+                </svg></div>
+            <h1>MTA:SA ICON STUDIO</h1>
+            <span class="badge">v3.0 PRO</span>
         </div>
-        <div>
-          <label>Borde</label>
-          <input type="color" id="borderColor" value="#ffffff" oninput="render()"/>
-        </div>
-      </div>
-      <div style="margin-top:10px">
-        <label>Ícono</label>
-        <input type="color" id="iconColor" value="#ffffff" oninput="render()"/>
-      </div>
+        <button class="btn-reset" onclick="resetAll()">
+            <svg viewBox="0 0 24 24">
+                <polyline points="1 4 1 10 7 10" />
+                <path d="M3.51 15a9 9 0 1 0 .49-4.95" />
+            </svg>
+            Reiniciar
+        </button>
+    </header>
+
+    <div class="workspace">
+
+        <!-- ═══ LEFT SIDEBAR ═══ -->
+        <aside class="sidebar">
+
+            <div class="section">
+                <div class="sec-title">
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="11" cy="11" r="8" />
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    </svg>
+                    Ícono
+                </div>
+                <div class="cat-tabs">
+                    <div class="cat-tab active" id="tab-lucide" onclick="setCategory('lucide')">Iconos Pro</div>
+                    <div class="cat-tab" id="tab-emoji" onclick="setCategory('emoji')">Emojis</div>
+                    <div class="cat-tab" id="tab-iconify" onclick="setCategory('iconify')">Librería Pro</div>
+                </div>
+                <div class="search-box"><input type="text" id="iconSearch" placeholder="Buscar ícono..."
+                        oninput="filterIcons()"></div>
+                <div class="icon-grid" id="iconGrid"></div>
+            </div>
+
+            <div class="section">
+                <div class="sec-title">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="7" height="7" />
+                        <rect x="14" y="3" width="7" height="7" />
+                        <rect x="14" y="14" width="7" height="7" />
+                        <rect x="3" y="14" width="7" height="7" />
+                    </svg>
+                    Forma del fondo
+                </div>
+                <div class="search-box"><input type="text" id="shapeSearch" placeholder="Buscar forma..."
+                        oninput="filterShapes()"></div>
+                <div class="shape-grid" id="shapeGrid"></div>
+            </div>
+
+            <div class="section">
+                <div class="sec-title">
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="13.5" cy="6.5" r="2.5" />
+                        <circle cx="19" cy="14" r="2.5" />
+                        <circle cx="6" cy="18" r="2.5" />
+                        <path d="M13.5 9L19 11.5M13.5 9L6 15.5" />
+                    </svg>
+                    Colores
+                </div>
+                <div class="ctrl">
+                    <div class="ctrl-label">Fondo</div>
+                    <div class="colors-2">
+                        <div>
+                            <div style="font-size:10px;color:var(--muted);margin-bottom:4px;">Color 1</div>
+                            <div class="clr-wrap"><input type="color" id="color1" value="#1a6fd4" oninput="render()">
+                            </div>
+                        </div>
+                        <div>
+                            <div style="font-size:10px;color:var(--muted);margin-bottom:4px;">Color 2</div>
+                            <div class="clr-wrap"><input type="color" id="color2" value="#7c3aed" oninput="render()">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ctrl">
+                    <div class="ctrl-label">Ícono / Texto</div>
+                    <div class="clr-wrap"><input type="color" id="iconColor" value="#ffffff" oninput="render()"></div>
+                </div>
+                <div class="toggle-row"><label class="lbl">Gradiente</label><label class="sw"><input type="checkbox"
+                            id="useGradient" checked onchange="render()"><span class="tr"></span></label></div>
+                <div class="toggle-row"><label class="lbl">Brillo interior</label><label class="sw"><input
+                            type="checkbox" id="useGlow" checked onchange="render()"><span class="tr"></span></label>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="sec-title">
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10" />
+                        <circle cx="12" cy="12" r="4" />
+                    </svg>
+                    Aro del suelo
+                </div>
+                <div class="ctrl">
+                    <div class="ctrl-label">Color del aro</div>
+                    <div class="clr-wrap"><input type="color" id="ringColor" value="#ffffff" oninput="render()"></div>
+                </div>
+                <div class="ctrl">
+                    <div class="ctrl-label">Radio <b id="vRingSize">1.5m</b></div>
+                    <input type="range" id="ringSize" min="30" max="220" value="130"
+                        oninput="sv('vRingSize',(this.value/100).toFixed(1)+'m')">
+                </div>
+                <div class="ctrl">
+                    <div class="ctrl-label">Opacidad <b id="vRingAlpha">160</b></div>
+                    <input type="range" id="ringAlpha" min="0" max="255" value="160"
+                        oninput="sv('vRingAlpha',this.value)">
+                </div>
+                <div class="ctrl">
+                    <div class="ctrl-label">Grosor <b id="vRingThick">10px</b></div>
+                    <input type="range" id="ringThick" min="2" max="28" value="10"
+                        oninput="sv('vRingThick',this.value+'px')">
+                </div>
+            </div>
+
+        </aside>
+
+        <!-- ═══ CENTER CANVAS ═══ -->
+        <main class="canvas-area">
+            <div class="grid-bg"></div>
+            <div class="live-badge">
+                <div class="dot"></div>Vista Previa en Juego
+            </div>
+            <canvas id="mainCanvas" width="420" height="380"></canvas>
+        </main>
+
+        <!-- ═══ RIGHT SIDEBAR ═══ -->
+        <aside class="sidebar right">
+
+            <div class="section">
+                <div class="sec-title">
+                    <svg viewBox="0 0 24 24">
+                        <line x1="4" y1="21" x2="4" y2="14" />
+                        <line x1="4" y1="10" x2="4" y2="3" />
+                        <line x1="12" y1="21" x2="12" y2="12" />
+                        <line x1="12" y1="8" x2="12" y2="3" />
+                        <line x1="20" y1="21" x2="20" y2="16" />
+                        <line x1="20" y1="12" x2="20" y2="3" />
+                        <line x1="1" y1="14" x2="7" y2="14" />
+                        <line x1="9" y1="8" x2="15" y2="8" />
+                        <line x1="17" y1="16" x2="23" y2="16" />
+                    </svg>
+                    Ajustes del Ícono
+                </div>
+                <div class="ctrl">
+                    <div class="ctrl-label">Escala del ícono <b id="vScale">60%</b></div>
+                    <input type="range" id="iconScale" min="20" max="115" value="60"
+                        oninput="sv('vScale',this.value+'%')">
+                </div>
+                <div class="ctrl">
+                    <div class="ctrl-label">Grosor borde <b id="vBorder">4px</b></div>
+                    <input type="range" id="borderW" min="0" max="36" value="4" oninput="sv('vBorder',this.value+'px')">
+                </div>
+                <div class="ctrl">
+                    <div class="ctrl-label">Desplazamiento Y <b id="vOffY">0px</b></div>
+                    <input type="range" id="offsetY" min="-70" max="70" value="0" oninput="sv('vOffY',this.value+'px')">
+                </div>
+                <div class="ctrl">
+                    <div class="ctrl-label">Etiqueta (opcional)</div>
+                    <input type="text" id="labelText" placeholder="Ej: BANCO" maxlength="10" oninput="render()">
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="sec-title">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="7 10 12 15 17 10" />
+                        <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
+                    Exportar PNG
+                </div>
+                <div class="ctrl">
+                    <div class="ctrl-label">Tamaño (px)</div>
+                    <div class="dim-row">
+                        <input type="number" id="dlW" value="256" min="16" max="2048" oninput="syncDim('w')">
+                        <span>×</span>
+                        <input type="number" id="dlH" value="256" min="16" max="2048" oninput="syncDim('h')">
+                    </div>
+                    <div class="toggle-row" style="margin-bottom:12px;"><label class="lbl"
+                            style="font-size:10px;">Bloquear proporción 1:1</label><label class="sw"><input
+                                type="checkbox" id="lockAR" checked><span class="tr"></span></label></div>
+                </div>
+                <button class="btn-dl btn-primary" onclick="dlMain()">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="18" height="18" rx="2" />
+                        <circle cx="8.5" cy="8.5" r="1.5" />
+                        <polyline points="21 15 16 10 5 21" />
+                    </svg>
+                    Descargar PNG
+                </button>
+                <button class="btn-dl btn-secondary" onclick="dlPack()">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                    </svg>
+                    Pack MTA (3 tamaños)
+                </button>
+            </div>
+
+            <div class="section" style="flex:1;overflow-y:auto;">
+                <div class="sec-title">
+                    <svg viewBox="0 0 24 24">
+                        <polyline points="16 18 22 12 16 6" />
+                        <polyline points="8 6 2 12 8 18" />
+                    </svg>
+                    Código Lua generado
+                </div>
+
+                <div class="code-block">
+                    <div class="code-head">
+                        <span>client.lua</span>
+                        <button class="copy-btn" onclick="copyCode('cClient')"><svg viewBox="0 0 24 24">
+                                <rect x="9" y="9" width="13" height="13" rx="2" />
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                            </svg>Copiar</button>
+                    </div>
+                    <div class="code-body" id="cClient"></div>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-head">
+                        <span>server.lua</span>
+                        <button class="copy-btn" onclick="copyCode('cServer')"><svg viewBox="0 0 24 24">
+                                <rect x="9" y="9" width="13" height="13" rx="2" />
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                            </svg>Copiar</button>
+                    </div>
+                    <div class="code-body" id="cServer"></div>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-head">
+                        <span>meta.xml</span>
+                        <button class="copy-btn" onclick="copyCode('cMeta')"><svg viewBox="0 0 24 24">
+                                <rect x="9" y="9" width="13" height="13" rx="2" />
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                            </svg>Copiar</button>
+                    </div>
+                    <div class="code-body" id="cMeta"></div>
+                </div>
+            </div>
+        </aside>
     </div>
 
-    <div class="section">
-      <div class="panel-title">Presets de color</div>
-      <div class="preset-row" id="presetRow"></div>
-    </div>
+    <script>
+        // ══════════════════════════════════════════
+        //  ICON DATA
+        // ══════════════════════════════════════════
+        const ICONS_EMOJI = [
+            { e: '🏠', l: 'Casa' }, { e: '🏥', l: 'Hospital' }, { e: '🚔', l: 'Policía' }, { e: '🔧', l: 'Mecánico' },
+            { e: '🏦', l: 'Banco' }, { e: '🛒', l: 'Tienda' }, { e: '🍔', l: 'Comida' }, { e: '⛽', l: 'Gasolinera' },
+            { e: '✈️', l: 'Aerop.' }, { e: '⭐', l: 'VIP' }, { e: '🔑', l: 'Acceso' }, { e: '💼', l: 'Trabajo' },
+            { e: '🎰', l: 'Casino' }, { e: '🏋️', l: 'Gym' }, { e: '🚗', l: 'Autos' }, { e: '📦', l: 'Almacén' },
+            { e: '💊', l: 'Farmacia' }, { e: '🎯', l: 'Misión' }, { e: '🏗️', l: 'Construc.' }, { e: '🚲', l: 'Bicicleta' },
+            { e: '🚌', l: 'Autobús' }, { e: '⚓', l: 'Puerto' }, { e: '🔫', l: 'Armería' }, { e: '💰', l: 'Dinero' },
+            { e: '🎪', l: 'Evento' }, { e: '🏪', l: 'Mini-mkt' }, { e: '🎭', l: 'Teatro' }, { e: '🏖️', l: 'Playa' },
+            { e: '🚁', l: 'Helicóp.' }, { e: '⚽', l: 'Deporte' }, { e: '🍕', l: 'Pizzería' }, { e: '☕', l: 'Café' },
+            { e: '🏨', l: 'Hotel' }, { e: '💈', l: 'Barbería' }, { e: '🚨', l: 'Emergenc.' }, { e: '🗺️', l: 'Mapa' },
+            { e: '🎮', l: 'Arcade' }, { e: '🔥', l: 'Especial' }, { e: '💎', l: 'Premium' }, { e: '🏆', l: 'Premio' },
+            { e: '⚡', l: 'Energía' }, { e: '🌊', l: 'Playa' }, { e: '🎸', l: 'Música' }, { e: '📡', l: 'Radio' },
+            { e: '🛡️', l: 'Seguridad' }, { e: '🧪', l: 'Lab' }, { e: '🚀', l: 'Lanzam.' }, { e: '🌴', l: 'Parque' },
+            { e: '🚢', l: 'Barco' }, { e: '🎲', l: 'Juegos' }, { e: '🐕', l: 'Animales' }, { e: '📱', l: 'Tecnol.' },
+            { e: '🏡', l: 'Residenc.' }, { e: '⛪', l: 'Iglesia' }, { e: '🏟️', l: 'Estadio' }, { e: '🎡', l: 'Parque div.' },
+            { e: '🚜', l: 'Rancho' }, { e: '🎓', l: 'Escuela' }, { e: '🌅', l: 'Vista' }, { e: '🎁', l: 'Regalo' },
+        ];
 
-    <div class="section">
-      <label>Tamaño del ícono: <span id="iconSizeVal">60</span>%</label>
-      <input type="range" id="iconSize" min="30" max="80" value="60" oninput="document.getElementById('iconSizeVal').textContent=this.value;render()"/>
-    </div>
+        const ICONS_LUCIDE = [
+            'badge-check', 'siren', 'gavel', 'ambulance', 'hospital', 'wrench', 'hammer', 'construction',
+            'anvil', 'drill', 'nut', 'settings', 'pickaxe', 'swords', 'target', 'crosshair', 'medal', 'skull',
+            'bomb', 'binoculars', 'navigation-2', 'home', 'car', 'shopping-cart', 'briefcase', 'banknote',
+            'utensils', 'fuel', 'plane', 'star', 'key', 'lock', 'camera', 'phone', 'music', 'heart', 'flag',
+            'gift', 'coffee', 'truck', 'anchor', 'mic', 'droplets', 'flame', 'zap', 'eye', 'award', 'user'
+        ];
 
-    <div class="section">
-      <label>Grosor del borde: <span id="borderWVal">4</span>px</label>
-      <input type="range" id="borderW" min="0" max="12" value="4" oninput="document.getElementById('borderWVal').textContent=this.value;render()"/>
-    </div>
+        let currentCat = 'lucide';
+        let curIcon = ICONS_LUCIDE[0];
+        let curShape = 'shield';
+        const svgCache = {};
+        let ALL_LUCIDE = [];
+        let ALL_EMOJI = [];
+        let ALL_ICONIFY = [];
+        let iconifyLoading = false;
 
-    <div class="section">
-      <label>Texto opcional</label>
-      <input type="text" id="labelText" placeholder="Ej: Hospital" oninput="render()" maxlength="12"/>
-    </div>
-  </div>
+        async function searchIconify(q) {
+            if (!q || q.length < 2) return;
+            iconifyLoading = true;
+            try {
+                const r = await fetch(`https://api.iconify.design/search?query=${q}&limit=64`);
+                const data = await r.json();
+                ALL_ICONIFY = data.icons.map(id => ({ id, l: id.split(':')[1] || id }));
+                if (currentCat === 'iconify') buildIconGrid();
+            } catch (e) { console.error(e); }
+            finally { iconifyLoading = false; }
+        }
+        async function fetchAllIcons() {
+            try {
+                // Fetch Lucide
+                const rL = await fetch('https://cdn.jsdelivr.net/npm/lucide-static/tags.json');
+                const dataL = await rL.json();
+                const namesL = Object.keys(dataL);
+                const restL = namesL.filter(n => !ICONS_LUCIDE.includes(n));
+                ALL_LUCIDE = [...ICONS_LUCIDE, ...restL];
 
-  <!-- CENTER: Canvas preview -->
-  <div class="canvas-area">
-    <div class="preview-label">Vista previa</div>
-    <div class="preview-sizes">
-      <div class="size-preview">
-        <canvas id="previewCanvas" width="200" height="200"></canvas>
-        <span>200 × 200 (export)</span>
-      </div>
-      <div class="size-preview">
-        <canvas id="smallCanvas" width="80" height="80"></canvas>
-        <span>Tamaño en juego</span>
-      </div>
-      <div class="size-preview">
-        <canvas id="tinyCanvas" width="40" height="40"></canvas>
-        <span>Radar</span>
-      </div>
-    </div>
-    <div class="preview-label" style="margin-top:8px">↑ Así se verá a distintas distancias</div>
-  </div>
+                // Fetch Emojis
+                const rE = await fetch('https://cdn.jsdelivr.net/npm/emoji.json@latest/emoji.json');
+                const dataE = await rE.json();
+                // dataE es un array de {char, name, ...}
+                const formattedE = dataE.map(x => ({ e: x.char, l: x.name }));
+                const currentEmojiChars = ICONS_EMOJI.map(x => x.e);
+                const restE = formattedE.filter(x => !currentEmojiChars.includes(x.e));
+                ALL_EMOJI = [...ICONS_EMOJI, ...restE];
 
-  <!-- RIGHT: Download + code -->
-  <div class="right-panel">
-    <div>
-      <div class="panel-title">Exportar</div>
-      <button class="download-btn" onclick="downloadPNG()">⬇ Descargar PNG (200×200)</button>
-      <button class="download-btn secondary" onclick="downloadAll()">⬇ Descargar pack 3 tamaños</button>
-    </div>
+                buildIconGrid();
+            } catch (e) {
+                console.error("Error:", e);
+                ALL_LUCIDE = [...ICONS_LUCIDE];
+                ALL_EMOJI = [...ICONS_EMOJI];
+            }
+        }
 
-    <div class="divider"></div>
+        // ══════════════════════════════════════════
+        //  SHAPE DATA — id, label, svg path for preview
+        // ══════════════════════════════════════════
+        const SHAPES = [
+            { id: 'shield', l: 'Escudo', d: 'M12 2L3 6v6c0 5.5 3.9 10.7 9 12 5.1-1.3 9-6.5 9-12V6z' },
+            { id: 'shield-alt', l: 'Gótico', d: 'M12 2H3v10c0 5 4 9 9 10 5-1 9-5 9-10V2z' },
+            { id: 'shield-pro', l: 'Escudo Pro', d: 'M12 2L2 7v5c0 5 4.5 9.5 10 11 5.5-1.5 10-6 10-11V7z' },
+            { id: 'circle', l: 'Círculo', d: 'M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z' },
+            { id: 'ring', l: 'Anillo', d: 'M12 3a9 9 0 1 0 0 18A9 9 0 0 0 12 3zm0 5a4 4 0 1 1 0 8 4 4 0 0 1 0-8z' },
+            { id: 'hexagon', l: 'Hexágono', d: 'M12 2L3.5 7v10L12 22l8.5-5V7z' },
+            { id: 'square', l: 'Cuadrado', d: 'M4 4h16v16H4z' },
+            { id: 'diamond', l: 'Rombo', d: 'M12 2L22 12 12 22 2 12z' },
+            { id: 'pentagon', l: 'Pentágono', d: 'M12 2l9.5 6.9-3.6 11.1H6.1L2.5 8.9z' },
+            { id: 'octagon', l: 'Octágono', d: 'M7.9 2h8.2L22 7.9v8.2L16.1 22H7.9L2 16.1V7.9z' },
+            { id: 'heart', l: 'Corazón', d: 'M12 21.6C9.3 19.5 2 14.5 2 8.5 2 5.4 4.4 3 7.5 3c1.7 0 3.4.8 4.5 2.2C13.1 3.8 14.8 3 16.5 3 19.6 3 22 5.4 22 8.5c0 6-7.3 11-10 13.1z' },
+            { id: 'star', l: 'Estrella', d: 'M12 2l3.1 6.3L22 9.3l-5 4.9 1.2 6.8L12 17.8l-6.2 3.2 1.2-6.8L2 9.3l6.9-1z' },
+            { id: 'triangle', l: 'Triángulo', d: 'M12 3L22 20H2z' },
+            { id: 'cross', l: 'Cruz', d: 'M9 2h6v7h7v6h-7v7H9v-7H2v-6h7z' },
+            { id: 'bubble', l: 'Burbuja', d: 'M20 2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12l4 4V4a2 2 0 0 0-2-2z' },
+            { id: 'banner', l: 'Banner', d: 'M4 2h16v20l-8-4-8 4z' },
+            { id: 'drop', l: 'Gota', d: 'M12 2c0 0-8 8.5-8 13a8 8 0 0 0 16 0c0-4.5-8-13-8-13z' },
+            { id: 'bolt', l: 'Rayo', d: 'M13 2L4 14h7l-2 8 9-12h-7z' },
+            { id: 'gear', l: 'Engrane', d: 'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm8.5-3a1.5 1.5 0 0 1 0-3h.5a9 9 0 0 0-.9-2.2l-.4.4a1.5 1.5 0 0 1-2.1-2.1l.4-.4A9 9 0 0 0 15.5 3H15a1.5 1.5 0 0 1 0-3h.5' },
+            { id: 'flame', l: 'Llama', d: 'M12 22c5.5-2 9-7 9-12C21 6 17 2 12 2c2 3 1 6-1 8-1-2-3-3-3-6C5.5 6 3 9 3 12c0 5.5 3.8 8.5 9 10z' },
+            { id: 'tag', l: 'Etiqueta', d: 'M20.6 11.2l-9.8-9.8A2 2 0 0 0 9.4 1H4a2 2 0 0 0-2 2v5.4a2 2 0 0 0 .6 1.4l9.8 9.8a2 2 0 0 0 2.8 0l5.4-5.4a2 2 0 0 0 0-2.8zM7 9a2 2 0 1 1 0-4 2 2 0 0 1 0 4z' },
+            { id: 'pin', l: 'Pin', d: 'M12 2C8.7 2 6 4.7 6 8c0 5.3 6 14 6 14s6-8.7 6-14c0-3.3-2.7-6-6-6zm0 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4z' },
+            { id: 'moon', l: 'Luna', d: 'M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z' },
+            { id: 'leaf', l: 'Hoja', d: 'M2 22c3-3 5-12 12-15 0 7-3 12-7 15H2z M2 22L12 12' },
+            { id: 'trophy', l: 'Copa', d: 'M8 21h8m-4-4v4M6 4H3v3a3 3 0 0 0 3 3m12-6h3v3a3 3 0 0 1-3 3M7 4h10l-1 9a5 5 0 0 1-8 0z' },
+            { id: 'badge', l: 'Placa', d: 'M12 1L9.6 3.6 6.3 2.8 5.1 6 1.8 6.9 2.1 10.3 0 12.8l2.2 2.5-.4 3.4 3.3.8 1.4 3 3-1.2 3 1.2 1.4-3 3.3-.8-.4-3.4L22 12.8l-2.2-2.5.4-3.4-3.3-.9L15.7 2.8z' },
+        ];
 
-    <div>
-      <div class="panel-title">Código Lua generado</div>
-      <div class="tag">client.lua</div>
-      <div class="code-box" id="codeBox"></div>
-    </div>
+        // ══════════════════════════════════════════
+        //  INIT
+        // ══════════════════════════════════════════
+        function init() {
+            fetchAllIcons();
+            buildIconGrid();
+            buildShapeGrid();
+            updateCode();
+            loop();
+        }
 
-    <div class="divider"></div>
+        function buildIconGrid() {
+            const g = document.getElementById('iconGrid');
+            g.innerHTML = '';
+            const q = document.getElementById('iconSearch').value.toLowerCase();
+            
+            // Opción NINGUNO
+            const noneEl = document.createElement('div');
+            noneEl.className = 'icon-item' + (curIcon === null ? ' active' : '');
+            noneEl.innerHTML = `<span style="font-size:18px;opacity:0.5">✕</span><span>Ninguno</span>`;
+            noneEl.onclick = () => { document.querySelectorAll('.icon-item').forEach(x => x.classList.remove('active')); noneEl.classList.add('active'); curIcon = null; render(); };
+            g.appendChild(noneEl);
 
-    <div>
-      <div class="panel-title">meta.xml</div>
-      <div class="tag">meta.xml</div>
-      <div class="code-box" id="metaBox"></div>
-    </div>
-  </div>
+            if (currentCat === 'emoji') {
+                const list = (ALL_EMOJI.length > 0) ? ALL_EMOJI : ICONS_EMOJI;
+                let count = 0;
+                for (const ic of list) {
+                    if (q && !ic.l.toLowerCase().includes(q)) continue;
+                    const el = document.createElement('div');
+                    el.className = 'icon-item' + (ic.e === (curIcon ? curIcon.e : null) ? ' active' : '');
+                    el.dataset.label = ic.l.toLowerCase();
+                    el.innerHTML = `<span>${ic.e}</span><span>${ic.l}</span>`;
+                    el.onclick = () => { document.querySelectorAll('.icon-item').forEach(x => x.classList.remove('active')); el.classList.add('active'); curIcon = ic; render(); };
+                    g.appendChild(el);
+                    count++;
+                    if (q && count > 150) break;
+                    if (!q && count > 200) break;
+                }
+            } else if (currentCat === 'iconify') {
+                if (ALL_ICONIFY.length === 0 && !q) {
+                    g.innerHTML += `<div style="grid-column: span 4; padding: 20px; text-align: center; color: var(--muted); font-size: 10px;">Escribe algo para buscar en +100,000 iconos...</div>`;
+                }
+                ALL_ICONIFY.forEach(ic => {
+                    const el = document.createElement('div');
+                    el.className = 'icon-item' + (ic.id === (curIcon ? curIcon.id : null) ? ' active' : '');
+                    el.innerHTML = `<span class="iconify" data-icon="${ic.id}" style="font-size:24px;"></span><span style="font-size:7px;margin-top:4px;">${ic.l}</span>`;
+                    el.onclick = () => { document.querySelectorAll('.icon-item').forEach(x => x.classList.remove('active')); el.classList.add('active'); curIcon = ic; render(); };
+                    g.appendChild(el);
+                });
+            } else {
+                const list = (ALL_LUCIDE.length > 0) ? ALL_LUCIDE : ICONS_LUCIDE;
+                let count = 0;
+                for (const name of list) {
+                    if (q && !name.toLowerCase().includes(q)) continue;
+                    const el = document.createElement('div');
+                    el.className = 'icon-item lucide-mode' + (name === (curIcon ? (curIcon.id || curIcon) : null) ? ' active' : '');
+                    el.innerHTML = `<i data-lucide="${name}"></i><span style="margin-top:4px;">${name}</span>`;
+                    el.onclick = () => { document.querySelectorAll('.icon-item').forEach(x => x.classList.remove('active')); el.classList.add('active'); curIcon = name; render(); };
+                    g.appendChild(el);
+                    count++;
+                    if (q && count > 150) break;
+                    if (!q && count > 200) break;
+                }
+                lucide.createIcons();
+            }
+        }
 
-</div>
+        function setCategory(cat) {
+            currentCat = cat;
+            curIcon = (cat === 'emoji') ? ICONS_EMOJI[0] : ICONS_LUCIDE[0];
+            document.getElementById('tabLucide').classList.toggle('active', cat === 'lucide');
+            document.getElementById('tabEmoji').classList.toggle('active', cat === 'emoji');
+            buildIconGrid();
+            render();
+        }
 
-<script>
-const ICONS = [
-  { e: '🏠', l: 'Casa' },
-  { e: '🚲', l: 'Bici' },
-  { e: '🏥', l: 'Hospital' },
-  { e: '🚔', l: 'Policía' },
-  { e: '🔧', l: 'Mecánico' },
-  { e: '🏦', l: 'Banco' },
-  { e: '🛒', l: 'Tienda' },
-  { e: '🍔', l: 'Comida' },
-  { e: '⛽', l: 'Gasolinera' },
-  { e: '✈️', l: 'Aeropuerto' },
-  { e: '🎯', l: 'Misión' },
-  { e: '💼', l: 'Trabajo' },
-  { e: '🎰', l: 'Casino' },
-  { e: '🏋️', l: 'Gym' },
-  { e: '🚗', l: 'Concesion.' },
-  { e: '⭐', l: 'Especial' },
-  { e: '📦', l: 'Almacén' },
-  { e: '🔑', l: 'Acceso' },
-  { e: '💊', l: 'Farmacia' },
-  { e: '🎪', l: 'Evento' },
-];
+        function buildShapeGrid() {
+            const g = document.getElementById('shapeGrid');
+            g.innerHTML = '';
 
-const PRESETS = [
-  { bg: '#1a6fd4', border: '#ffffff', icon: '#ffffff', name: 'Azul RP' },
-  { bg: '#16a34a', border: '#ffffff', icon: '#ffffff', name: 'Verde' },
-  { bg: '#dc2626', border: '#ffffff', icon: '#ffffff', name: 'Rojo' },
-  { bg: '#7c3aed', border: '#d4b8ff', icon: '#ffffff', name: 'Morado' },
-  { bg: '#b45309', border: '#fef3c7', icon: '#ffffff', name: 'Dorado' },
-  { bg: '#0f172a', border: '#38bdf8', icon: '#38bdf8', name: 'Neon' },
-];
+            // Opción NINGUNO
+            const noneEl = document.createElement('div');
+            noneEl.className = 'shape-btn' + (curShape === 'none' ? ' active' : '');
+            noneEl.innerHTML = `<span style="font-size:16px;opacity:0.5">✕</span><span>Ninguno</span>`;
+            noneEl.onclick = () => { document.querySelectorAll('.shape-btn').forEach(x => x.classList.remove('active')); noneEl.classList.add('active'); curShape = 'none'; render(); };
+            g.appendChild(noneEl);
 
-let currentIcon = ICONS[0];
-let currentShape = 'shield';
+            SHAPES.forEach(s => {
+                const el = document.createElement('div');
+                el.className = 'shape-btn' + (s.id === curShape ? ' active' : '');
+                el.dataset.id = s.id; el.dataset.label = s.l.toLowerCase();
+                el.innerHTML = `<svg viewBox="0 0 24 24" style="fill:currentColor;stroke:none;opacity:.7"><path d="${s.d}"/></svg><span>${s.l}</span>`;
+                el.onclick = () => { document.querySelectorAll('.shape-btn').forEach(x => x.classList.remove('active')); el.classList.add('active'); curShape = s.id; };
+                g.appendChild(el);
+            });
+        }
 
-// Build icon grid
-const grid = document.getElementById('iconGrid');
-ICONS.forEach((ic, i) => {
-  const btn = document.createElement('div');
-  btn.className = 'icon-btn' + (i === 0 ? ' active' : '');
-  btn.title = ic.l;
-  btn.textContent = ic.e;
-  btn.onclick = () => {
-    document.querySelectorAll('.icon-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    currentIcon = ic;
-    render();
-  };
-  grid.appendChild(btn);
-});
+        function setCategory(cat) {
+            currentCat = cat;
+            document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(`tab-${cat}`).classList.add('active');
+            document.getElementById('iconSearch').value = '';
+            buildIconGrid();
+        }
 
-// Build presets
-const pr = document.getElementById('presetRow');
-PRESETS.forEach(p => {
-  const btn = document.createElement('div');
-  btn.className = 'preset-btn';
-  btn.innerHTML = `<div class="preset-dot" style="background:${p.bg};border:2px solid ${p.border}"></div><span>${p.name}</span>`;
-  btn.onclick = () => {
-    document.getElementById('bgColor').value = p.bg;
-    document.getElementById('borderColor').value = p.border;
-    document.getElementById('iconColor').value = p.icon;
-    render();
-  };
-  pr.appendChild(btn);
-});
+        let searchTimer;
+        function filterIcons() {
+            const q = document.getElementById('iconSearch').value.toLowerCase();
+            if (currentCat === 'iconify') {
+                clearTimeout(searchTimer);
+                searchTimer = setTimeout(() => searchIconify(q), 500);
+            } else {
+                buildIconGrid();
+            }
+        }
+        function filterShapes() {
+            const q = document.getElementById('shapeSearch').value.toLowerCase();
+            document.querySelectorAll('.shape-btn').forEach(el => { el.style.display = (el.dataset.label.includes(q) || el.dataset.id.includes(q)) ? '' : 'none'; });
+        }
 
-function setShape(s, el) {
-  currentShape = s;
-  document.querySelectorAll('.shape-btn').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
-  render();
-}
+        function sv(id, val) { document.getElementById(id).textContent = val; }
 
-function drawShape(ctx, size, shape, bg, border, borderW) {
-  const half = size / 2;
-  const inset = borderW / 2;
+        // ══════════════════════════════════════════
+        //  DRAWING — SHAPE
+        // ══════════════════════════════════════════
+        function drawShape(ctx, sz, shape, c1, c2, grad, bw, iColor, glow) {
+            const h = sz / 2, ins = bw / 2;
+            ctx.beginPath();
+            switch (shape) {
+                case 'shield': { const w = sz - ins * 2, ht = sz - ins * 2, x = ins, y = ins, r = w * 0.15; ctx.moveTo(x + r, y); ctx.lineTo(x + w - r, y); ctx.quadraticCurveTo(x + w, y, x + w, y + r); ctx.lineTo(x + w, y + ht * 0.55); ctx.quadraticCurveTo(x + w, y + ht * 0.8, x + w / 2, y + ht); ctx.quadraticCurveTo(x, y + ht * 0.8, x, y + ht * 0.55); ctx.lineTo(x, y + r); ctx.quadraticCurveTo(x, y, x + r, y); break; }
+                case 'shield-alt': { const w = sz - ins * 2, ht = sz - ins * 2, x = ins, y = ins; ctx.moveTo(x, y); ctx.lineTo(x + w, y); ctx.lineTo(x + w, y + ht * 0.6); ctx.quadraticCurveTo(x + w, y + ht * 0.8, x + w / 2, y + ht); ctx.quadraticCurveTo(x, y + ht * 0.8, x, y + ht * 0.6); ctx.closePath(); break; }
+                case 'shield-pro': { const w = sz - ins * 2, ht = sz - ins * 2, x = ins, y = ins, r = w * 0.1; ctx.moveTo(x + r, y); ctx.lineTo(x + w - r, y); ctx.quadraticCurveTo(x + w, y, x + w, y + r); ctx.lineTo(x + w, y + ht * 0.65); ctx.lineTo(h, y + ht); ctx.lineTo(x, y + ht * 0.65); ctx.lineTo(x, y + r); ctx.quadraticCurveTo(x, y, x + r, y); break; }
+                case 'circle': ctx.arc(h, h, h - ins, 0, Math.PI * 2); break;
+                case 'ring': ctx.arc(h, h, h - ins, 0, Math.PI * 2); ctx.moveTo(h + (h - ins) * 0.65, h); ctx.arc(h, h, (h - ins) * 0.65, 0, Math.PI * 2, true); break;
+                case 'hexagon': for (let i = 0; i < 6; i++) { const a = Math.PI / 180 * (60 * i - 30); ctx.lineTo(h + (h - ins) * Math.cos(a), h + (h - ins) * Math.sin(a)); } ctx.closePath(); break;
+                case 'square': ctx.roundRect(ins, ins, sz - ins * 2, sz - ins * 2, sz * 0.12); break;
+                case 'diamond': ctx.moveTo(h, ins); ctx.lineTo(sz - ins, h); ctx.lineTo(h, sz - ins); ctx.lineTo(ins, h); ctx.closePath(); break;
+                case 'pentagon': for (let i = 0; i < 5; i++) { const a = Math.PI / 180 * (72 * i - 90); ctx.lineTo(h + (h - ins) * Math.cos(a), h + (h - ins) * Math.sin(a)); } ctx.closePath(); break;
+                case 'octagon': for (let i = 0; i < 8; i++) { const a = Math.PI / 180 * (45 * i - 22.5); ctx.lineTo(h + (h - ins) * Math.cos(a), h + (h - ins) * Math.sin(a)); } ctx.closePath(); break;
+                case 'heart': { const x = ins, y = ins, w = sz - ins * 2, ht = sz - ins * 2; ctx.moveTo(x + w / 2, y + ht * 0.3); ctx.bezierCurveTo(x + w / 2, y, x, y, x, y + ht * 0.3); ctx.bezierCurveTo(x, y + ht * 0.6, x + w / 2, y + ht * 0.9, x + w / 2, y + ht); ctx.bezierCurveTo(x + w / 2, y + ht * 0.9, x + w, y + ht * 0.6, x + w, y + ht * 0.3); ctx.bezierCurveTo(x + w, y, x + w / 2, y, x + w / 2, y + ht * 0.3); break; }
+                case 'star': { const spikes = 5, or = h - ins, ir = (h - ins) * 0.42; let rot = Math.PI / 2 * 3, step = Math.PI / spikes; ctx.moveTo(h, h - or); for (let i = 0; i < spikes; i++) { ctx.lineTo(h + Math.cos(rot) * or, h + Math.sin(rot) * or); rot += step; ctx.lineTo(h + Math.cos(rot) * ir, h + Math.sin(rot) * ir); rot += step; } ctx.closePath(); break; }
+                case 'triangle': ctx.moveTo(h, ins); ctx.lineTo(sz - ins, sz - ins); ctx.lineTo(ins, sz - ins); ctx.closePath(); break;
+                case 'cross': { const t = sz * 0.3, ht = sz - ins * 2, x = ins, y = ins, w = sz - ins * 2; ctx.moveTo(x + (w - t) / 2, y); ctx.lineTo(x + (w + t) / 2, y); ctx.lineTo(x + (w + t) / 2, y + (ht - t) / 2); ctx.lineTo(x + w, y + (ht - t) / 2); ctx.lineTo(x + w, y + (ht + t) / 2); ctx.lineTo(x + (w + t) / 2, y + (ht + t) / 2); ctx.lineTo(x + (w + t) / 2, y + ht); ctx.lineTo(x + (w - t) / 2, y + ht); ctx.lineTo(x + (w - t) / 2, y + (ht + t) / 2); ctx.lineTo(x, y + (ht + t) / 2); ctx.lineTo(x, y + (ht - t) / 2); ctx.lineTo(x + (w - t) / 2, y + (ht - t) / 2); ctx.closePath(); break; }
+                case 'bubble': { const w = sz - ins * 2, ht = (sz - ins * 2) * 0.82, x = ins, y = ins, r = sz * 0.14; ctx.moveTo(x + r, y); ctx.lineTo(x + w - r, y); ctx.quadraticCurveTo(x + w, y, x + w, y + r); ctx.lineTo(x + w, y + ht - r); ctx.quadraticCurveTo(x + w, y + ht, x + w - r, y + ht); ctx.lineTo(h + 14, y + ht); ctx.lineTo(h, y + ht + 16); ctx.lineTo(h - 14, y + ht); ctx.lineTo(x + r, y + ht); ctx.quadraticCurveTo(x, y + ht, x, y + ht - r); ctx.lineTo(x, y + r); ctx.quadraticCurveTo(x, y, x + r, y); ctx.closePath(); break; }
+                case 'banner': { const w = sz - ins * 2, ht = sz - ins * 2, x = ins, y = ins; ctx.moveTo(x, y); ctx.lineTo(x + w, y); ctx.lineTo(x + w, y + ht); ctx.lineTo(h, y + ht * 0.82); ctx.lineTo(x, y + ht); ctx.closePath(); break; }
+                case 'drop': { ctx.moveTo(h, ins); ctx.bezierCurveTo(sz - ins, h, sz - ins, sz - ins, h, sz - ins); ctx.bezierCurveTo(ins, sz - ins, ins, h, h, ins); ctx.closePath(); break; }
+                case 'bolt': { ctx.moveTo(h + 18, ins); ctx.lineTo(ins + 18, h + 8); ctx.lineTo(h + 8, h + 8); ctx.lineTo(h - 18, sz - ins); ctx.lineTo(sz - ins - 18, h - 8); ctx.lineTo(h - 8, h - 8); ctx.closePath(); break; }
+                case 'gear': { const teeth = 8, r1 = h - ins, r2 = (h - ins) * 0.72, r3 = (h - ins) * 0.28; for (let i = 0; i < teeth; i++) { const a = (Math.PI * 2 / teeth) * i; ctx.lineTo(h + r1 * Math.cos(a - 0.12), h + r1 * Math.sin(a - 0.12)); ctx.lineTo(h + r1 * Math.cos(a + 0.12), h + r1 * Math.sin(a + 0.12)); ctx.lineTo(h + r2 * Math.cos(a + 0.32), h + r2 * Math.sin(a + 0.32)); ctx.lineTo(h + r2 * Math.cos(a + (Math.PI * 2 / teeth) - 0.32), h + r2 * Math.sin(a + (Math.PI * 2 / teeth) - 0.32)); } ctx.closePath(); ctx.moveTo(h + r3, h); ctx.arc(h, h, r3, 0, Math.PI * 2, true); break; }
+                case 'flame': { const w = sz - ins * 2, ht = sz - ins * 2, x = ins, y = ins; ctx.moveTo(h, y + ht); ctx.bezierCurveTo(x + w, y + ht, x + w, y + ht * 0.45, h + w * 0.1, y); ctx.bezierCurveTo(h, y + ht * 0.28, x, y + ht * 0.28, h, y + ht); ctx.closePath(); break; }
+                case 'tag': { const w = sz - ins * 2, ht = sz - ins * 2, x = ins, y = ins; ctx.moveTo(x + w * 0.28, y); ctx.lineTo(x + w, y); ctx.lineTo(x + w, y + ht * 0.72); ctx.lineTo(h, y + ht); ctx.lineTo(x, y + ht * 0.5); ctx.closePath(); break; }
+                case 'pin': { ctx.moveTo(h, sz - ins); ctx.bezierCurveTo(ins, h + (sz - ins * 2) * 0.22, ins, ins, h, ins); ctx.bezierCurveTo(sz - ins, ins, sz - ins, h + (sz - ins * 2) * 0.22, h, sz - ins); ctx.closePath(); break; }
+                case 'moon': { ctx.arc(h, h, h - ins, Math.PI * 0.22, Math.PI * 1.5); ctx.quadraticCurveTo(h, h, h + (h - ins) * Math.cos(Math.PI * 0.22), h + (h - ins) * Math.sin(Math.PI * 0.22)); ctx.closePath(); break; }
+                case 'leaf': { const w = sz - ins * 2, ht = sz - ins * 2, x = ins, y = ins; ctx.moveTo(x + w, y); ctx.quadraticCurveTo(x + w * 0.08, y + ht * 0.08, x, y + ht); ctx.quadraticCurveTo(x + w * 0.92, y + ht * 0.92, x + w, y); ctx.closePath(); break; }
+                case 'trophy': { const w = sz - ins * 2, ht = sz - ins * 2, x = ins, y = ins; ctx.moveTo(x + w * 0.2, y); ctx.lineTo(x + w * 0.8, y); ctx.quadraticCurveTo(x + w * 0.8, y + ht * 0.65, h, y + ht * 0.72); ctx.quadraticCurveTo(x + w * 0.2, y + ht * 0.65, x + w * 0.2, y); break; }
+                case 'badge': { const pts = 14; for (let i = 0; i < pts; i++) { const a = (Math.PI * 2 / pts) * i, r = i % 2 === 0 ? h - ins : (h - ins) * 0.88; ctx.lineTo(h + r * Math.cos(a), h + r * Math.sin(a)); } ctx.closePath(); break; }
+                case 'none': return; // No dibujar nada
+                default: ctx.arc(h, h, h - ins, 0, Math.PI * 2);
+            }
 
-  ctx.beginPath();
+            if (grad) { const g = ctx.createLinearGradient(0, 0, 0, sz); g.addColorStop(0, c1); g.addColorStop(1, c2); ctx.fillStyle = g; }
+            else ctx.fillStyle = c1;
 
-  if (shape === 'shield') {
-    const w = size - inset * 2;
-    const h = size - inset * 2;
-    const x = inset, y = inset;
-    const r = w * 0.18;
-    // Shield: rounded top corners, pointed bottom
-    ctx.moveTo(x + r, y);
-    ctx.lineTo(x + w - r, y);
-    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
-    ctx.lineTo(x + w, y + h * 0.55);
-    ctx.quadraticCurveTo(x + w, y + h * 0.78, x + w / 2, y + h);
-    ctx.quadraticCurveTo(x, y + h * 0.78, x, y + h * 0.55);
-    ctx.lineTo(x, y + r);
-    ctx.quadraticCurveTo(x, y, x + r, y);
-  } else if (shape === 'circle') {
-    ctx.arc(half, half, half - inset, 0, Math.PI * 2);
-  } else if (shape === 'hexagon') {
-    for (let i = 0; i < 6; i++) {
-      const a = Math.PI / 180 * (60 * i - 30);
-      const x = half + (half - inset) * Math.cos(a);
-      const y = half + (half - inset) * Math.sin(a);
-      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-    }
-    ctx.closePath();
-  } else if (shape === 'square') {
-    const r2 = size * 0.12;
-    ctx.roundRect(inset, inset, size - inset * 2, size - inset * 2, r2);
-  } else if (shape === 'diamond') {
-    ctx.moveTo(half, inset);
-    ctx.lineTo(size - inset, half);
-    ctx.lineTo(half, size - inset);
-    ctx.lineTo(inset, half);
-    ctx.closePath();
-  } else if (shape === 'pentagon') {
-    for (let i = 0; i < 5; i++) {
-      const a = Math.PI / 180 * (72 * i - 90);
-      const x = half + (half - inset) * Math.cos(a);
-      const y = half + (half - inset) * Math.sin(a);
-      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-    }
-    ctx.closePath();
-  }
+            ctx.shadowColor = 'rgba(0,0,0,.55)'; ctx.shadowBlur = sz * .06; ctx.shadowOffsetY = sz * .03;
+            ctx.fill('evenodd');
+            ctx.shadowBlur = 0; ctx.shadowOffsetY = 0;
 
-  ctx.fillStyle = bg;
-  ctx.fill();
+            if (glow) { ctx.save(); try { ctx.clip('evenodd'); } catch (e) { } ctx.strokeStyle = 'rgba(255,255,255,.22)'; ctx.lineWidth = sz * .05; ctx.stroke(); ctx.restore(); }
+            if (bw > 0) { ctx.strokeStyle = iColor; ctx.lineWidth = bw; ctx.stroke(); }
+        }
 
-  if (borderW > 0) {
-    ctx.strokeStyle = border;
-    ctx.lineWidth = borderW;
-    ctx.stroke();
-  }
-}
+        // ══════════════════════════════════════════
+        //  DRAWING — ICON DUAL
+        // ══════════════════════════════════════════
+        async function drawIcon(ctx, sz, scalePct, offY, hasLabel) {
+            if (!curIcon) return;
+            if (currentCat === 'emoji') {
+                drawEmoji(ctx, sz, curIcon.e, scalePct, offY, hasLabel);
+            } else if (currentCat === 'iconify') {
+                await drawExternalIcon(ctx, sz, curIcon.id, scalePct, offY, hasLabel);
+            } else {
+                const name = curIcon.id || curIcon;
+                await drawLucide(ctx, sz, name, scalePct, offY, hasLabel);
+            }
+        }
 
-function renderToCanvas(canvas) {
-  const size = canvas.width;
-  const ctx = canvas.getContext('2d');
-  ctx.clearRect(0, 0, size, size);
+        function drawEmoji(ctx, sz, emoji, scalePct, offY, hasLabel) {
+            const emojiSz = sz * (scalePct / 100) * 0.62;
+            const extraOff = hasLabel ? -sz * 0.06 : 0;
+            const yPos = (curShape === 'shield' || curShape === 'shield-alt' || curShape === 'shield-pro') ? sz * 0.43 + extraOff : sz * 0.5 + extraOff;
+            ctx.save();
+            ctx.font = `${emojiSz}px serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(emoji, sz / 2, yPos + offY * (sz / 256));
+            ctx.restore();
+        }
 
-  const bg = document.getElementById('bgColor').value;
-  const border = document.getElementById('borderColor').value;
-  const iconColor = document.getElementById('iconColor').value;
-  const iconPct = parseInt(document.getElementById('iconSize').value) / 100;
-  const borderW = parseInt(document.getElementById('borderW').value) * (size / 200);
-  const label = document.getElementById('labelText').value;
+        async function drawLucide(ctx, sz, name, scalePct, offY, hasLabel) {
+            const paths = await getSvgPath(name);
+            const s = (sz * (scalePct / 100)) / 24;
+            const extraOff = hasLabel ? -sz * 0.06 : 0;
+            const yPos = (curShape === 'shield' || curShape === 'shield-alt' || curShape === 'shield-pro') ? sz * 0.43 + extraOff : sz * 0.5 + extraOff;
 
-  // Shadow
-  ctx.save();
-  ctx.shadowColor = 'rgba(0,0,0,0.4)';
-  ctx.shadowBlur = size * 0.08;
-  ctx.shadowOffsetY = size * 0.04;
-  drawShape(ctx, size, currentShape, bg, border, borderW);
-  ctx.restore();
+            ctx.save();
+            ctx.translate(sz / 2, yPos + offY * (sz / 256));
+            ctx.scale(s, s);
+            ctx.translate(-12, -12);
 
-  // Draw icon emoji
-  const iconSize = size * iconPct;
-  const offsetY = label ? -size * 0.06 : 0;
+            ctx.strokeStyle = document.getElementById('iconColor').value;
+            ctx.lineWidth = 2; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
 
-  // For colored icon, we use fillText with a colored rect trick
-  ctx.save();
-  ctx.font = `${iconSize}px serif`;
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
+            paths.forEach(p => {
+                ctx.beginPath();
+                if (p.type === 'path') ctx.stroke(new Path2D(p.d));
+                else if (p.type === 'circle') { ctx.arc(p.cx, p.cy, p.r, 0, Math.PI * 2); ctx.stroke(); }
+                else if (p.type === 'rect') ctx.strokeRect(p.x, p.y, p.width, p.height);
+                else if (p.type === 'line') { ctx.moveTo(p.x1, p.y1); ctx.lineTo(p.x2, p.y2); ctx.stroke(); }
+            });
+            ctx.restore();
+        }
 
-  // Draw emoji
-  const emojiY = currentShape === 'shield'
-    ? size * 0.42 + offsetY
-    : size * 0.50 + offsetY;
+        async function getSvgPath(name) {
+            if (svgCache[name]) return svgCache[name];
+            const temp = document.createElement('div');
+            temp.innerHTML = `<i data-lucide="${name}"></i>`;
+            document.body.appendChild(temp);
+            lucide.createIcons();
+            const svg = temp.querySelector('svg');
+            if (!svg) return [];
+            const paths = Array.from(svg.querySelectorAll('path, circle, rect, line, polyline, polygon')).map(p => ({
+                type: p.tagName,
+                d: p.getAttribute('d'),
+                cx: p.getAttribute('cx'), cy: p.getAttribute('cy'), r: p.getAttribute('r'),
+                x: p.getAttribute('x'), y: p.getAttribute('y'), width: p.getAttribute('width'), height: p.getAttribute('height'),
+                x1: p.getAttribute('x1'), y1: p.getAttribute('y1'), x2: p.getAttribute('x2'), y2: p.getAttribute('y2')
+            }));
+            document.body.removeChild(temp);
+            svgCache[name] = paths;
+            return paths;
+        }
 
-  ctx.fillText(currentIcon.e, size / 2, emojiY);
-  ctx.restore();
+        async function drawExternalIcon(ctx, sz, id, scalePct, offY, hasLabel) {
+            if (svgCache[id]) {
+                drawPaths(ctx, sz, svgCache[id], scalePct, offY, hasLabel);
+                return;
+            }
+            try {
+                const r = await fetch(`https://api.iconify.design/${id}.svg`);
+                const text = await r.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(text, 'image/svg+xml');
+                const paths = [];
+                doc.querySelectorAll('path').forEach(p => paths.push({ type: 'path', d: p.getAttribute('d') }));
+                doc.querySelectorAll('circle').forEach(c => paths.push({ type: 'circle', cx: c.getAttribute('cx'), cy: c.getAttribute('cy'), r: c.getAttribute('r') }));
+                svgCache[id] = paths;
+                drawPaths(ctx, sz, paths, scalePct, offY, hasLabel);
+            } catch (e) { console.error(e); }
+        }
 
-  // Label text
-  if (label) {
-    const fontSize = Math.max(size * 0.1, 10);
-    ctx.save();
-    ctx.font = `bold ${fontSize}px Inter, sans-serif`;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillStyle = iconColor;
-    const labelY = currentShape === 'shield' ? size * 0.76 : size * 0.78;
-    ctx.fillText(label.toUpperCase(), size / 2, labelY);
-    ctx.restore();
-  }
-}
+        function drawPaths(ctx, sz, paths, scalePct, offY, hasLabel) {
+            const s = (sz * (scalePct / 100)) / 24;
+            const extraOff = hasLabel ? -sz * 0.06 : 0;
+            const yPos = (curShape === 'shield' || curShape === 'shield-alt' || curShape === 'shield-pro') ? sz * 0.43 + extraOff : sz * 0.5 + extraOff;
+            ctx.save();
+            ctx.translate(sz / 2, yPos + offY * (sz / 256));
+            ctx.scale(s, s);
+            ctx.translate(-12, -12);
+            ctx.strokeStyle = document.getElementById('iconColor').value;
+            ctx.lineWidth = 2; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+            paths.forEach(p => {
+                ctx.beginPath();
+                if (p.type === 'path') ctx.stroke(new Path2D(p.d));
+                else if (p.type === 'circle') { ctx.arc(p.cx, p.cy, p.r, 0, Math.PI * 2); ctx.stroke(); }
+            });
+            ctx.restore();
+        }
 
-function render() {
-  renderToCanvas(document.getElementById('previewCanvas'));
-  renderToCanvas(document.getElementById('smallCanvas'));
-  renderToCanvas(document.getElementById('tinyCanvas'));
-  updateCode();
-}
+        function drawLabel(ctx, sz, text, color, offY) {
+            if (!text) return;
+            const fs = Math.max(sz * 0.105, 8);
+            ctx.save();
+            ctx.font = `700 ${fs}px 'Outfit',sans-serif`;
+            ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic'; ctx.fillStyle = color;
+            const isShield = ['shield', 'shield-alt', 'shield-pro'].includes(curShape);
+            const yPos = isShield ? sz * 0.81 : sz * 0.84;
+            ctx.fillText(text.toUpperCase(), sz / 2, yPos + offY * (sz / 256));
+            ctx.restore();
+        }
 
-function updateCode() {
-  const label = document.getElementById('labelText').value || 'miMarker';
-  const safe = label.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '') || 'marker';
+        // ══════════════════════════════════════════
+        //  OFFSCREEN ICON RENDER
+        // ══════════════════════════════════════════
+        const offCvs = document.createElement('canvas');
+        offCvs.width = 170; offCvs.height = 170;
 
-  document.getElementById('codeBox').textContent =
-`-- ikon_${safe}.lua (client-side)
+        async function renderIconOff() {
+            const ctx = offCvs.getContext('2d');
+            const sz = offCvs.width;
+            ctx.clearRect(0, 0, sz, sz);
+            const c1 = document.getElementById('color1').value;
+            const c2 = document.getElementById('color2').value;
+            const ic = document.getElementById('iconColor').value;
+            const gr = document.getElementById('useGradient').checked;
+            const gl = document.getElementById('useGlow').checked;
+            const bw = parseInt(document.getElementById('borderW').value) * (sz / 256);
+            const sc = parseInt(document.getElementById('iconScale').value);
+            const oy = parseInt(document.getElementById('offsetY').value);
+            const lbl = document.getElementById('labelText').value;
+            drawShape(ctx, sz, curShape, c1, c2, gr, bw, ic, gl);
+            await drawIcon(ctx, sz, sc, oy, !!lbl);
+            drawLabel(ctx, sz, lbl, ic, oy);
+        }
+
+        // ══════════════════════════════════════════
+        //  SCENE RENDER (main canvas)
+        // ══════════════════════════════════════════
+        async function renderScene() {
+            const canvas = document.getElementById('mainCanvas');
+            const ctx = canvas.getContext('2d');
+            const W = canvas.width, H = canvas.height;
+            ctx.clearRect(0, 0, W, H);
+
+            // Sky
+            const sky = ctx.createLinearGradient(0, 0, 0, H * .52);
+            sky.addColorStop(0, '#080c14'); sky.addColorStop(1, '#121e30');
+            ctx.fillStyle = sky; ctx.fillRect(0, 0, W, H * .52);
+
+            // Ground
+            const gnd = ctx.createLinearGradient(0, H * .52, 0, H);
+            gnd.addColorStop(0, '#243d14'); gnd.addColorStop(1, '#162610');
+            ctx.fillStyle = gnd; ctx.fillRect(0, H * .52, W, H * .48);
+
+            // Perspective grid
+            ctx.strokeStyle = 'rgba(255,255,255,0.035)'; ctx.lineWidth = 1;
+            const vp = { x: W / 2, y: H * .52 };
+            for (let i = -10; i <= 10; i++) { ctx.beginPath(); ctx.moveTo(vp.x + i * 55, H); ctx.lineTo(vp.x + i * 4, H * .52); ctx.stroke(); }
+            for (let j = 0; j < 7; j++) { const t = j / 6, y = H * .52 + (H * .48) * t * t; ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+
+            // Ground ring
+            const rColor = document.getElementById('ringColor').value;
+            const rAlpha = parseInt(document.getElementById('ringAlpha').value) / 255;
+            const rSize = (parseInt(document.getElementById('ringSize').value) / 100) * 52;
+            const rThick = parseInt(document.getElementById('ringThick').value);
+            const rgb = hexRgb(rColor);
+            const cx = W / 2, cy = H * .73;
+            const rx = rSize, ry = rSize * .28;
+
+            // Glow pass
+            ctx.save();
+            ctx.shadowColor = rColor; ctx.shadowBlur = 22;
+            ctx.strokeStyle = `rgba(${rgb.r},${rgb.g},${rgb.b},${rAlpha * .6})`;
+            ctx.lineWidth = rThick + 6;
+            ctx.beginPath(); ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2); ctx.stroke();
+            ctx.restore();
+            // Main ring
+            ctx.save();
+            ctx.strokeStyle = `rgba(${rgb.r},${rgb.g},${rgb.b},${rAlpha})`;
+            ctx.lineWidth = rThick;
+            ctx.beginPath(); ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2); ctx.stroke();
+            ctx.restore();
+
+            // Icon
+            await renderIconOff();
+            const bob = Math.sin(Date.now() / 720) * 7;
+            const iw = offCvs.width, ih = offCvs.height;
+            const ix = cx - iw / 2, iy = H * .08 + bob;
+
+            // Shadow under icon
+            ctx.save();
+            ctx.shadowColor = 'rgba(0,0,0,.5)'; ctx.shadowBlur = 18; ctx.shadowOffsetY = 7;
+            ctx.drawImage(offCvs, ix, iy, iw, ih);
+            ctx.restore();
+
+            // Dotted connector
+            ctx.save();
+            ctx.strokeStyle = 'rgba(255,255,255,.09)'; ctx.lineWidth = 1; ctx.setLineDash([3, 7]);
+            ctx.beginPath(); ctx.moveTo(cx, iy + ih); ctx.lineTo(cx, cy - ry); ctx.stroke();
+            ctx.restore();
+        }
+
+        // ══════════════════════════════════════════
+        //  CODE GENERATION
+        // ══════════════════════════════════════════
+        function updateCode() {
+            const lbl = document.getElementById('labelText').value || 'marker';
+            const name = lbl.toLowerCase().replace(/[^a-z0-9]/g, '') || 'icon';
+            const rColor = document.getElementById('ringColor').value;
+            const { r, g, b } = hexRgb(rColor);
+            const rAlpha = document.getElementById('ringAlpha').value;
+            const rSize = (document.getElementById('ringSize').value / 100).toFixed(1);
+
+            document.getElementById('cClient').textContent =
+                `-- Imagen flotante (billboard)
 local img = dxCreateTexture(
-    "icons/icon_${safe}.png"
+    "icons/${name}.png", "argb", true, "clamp"
+)
+local x, y, z = 0, 0, 3
+-- ^ Reemplaza con tus coordenadas
+
+addEventHandler("onClientRender", root, function()
+    local px, py, pz = getElementPosition(localPlayer)
+    local d = getDistanceBetweenPoints3D(px,py,pz, x,y,z)
+    if d < 40 then
+        dxDrawMaterialLine3D(
+            x, y, z + 1.8,
+            x, y, z + 0.7,
+            img, 1.0,
+            tocolor(255, 255, 255, 255)
+        )
+    end
+end)`;
+
+            document.getElementById('cServer').textContent =
+                `-- Aro del suelo
+local mk = createMarker(
+    0, 0, 3,       -- X, Y, Z (tus coords)
+    "ring",        -- tipo: ring, cylinder
+    ${rSize},      -- radio en metros
+    ${r}, ${g}, ${b}, ${rAlpha}
 )
 
-local pos = {x=0, y=0, z=0}
--- ^ Cambia por tus coords
-
-addEventHandler("onClientRender",
-  root, function()
-    local px,py,pz =
-      getElementPosition(
-        localPlayer)
-    local dist = getDistanceBetweenPoints3D(
-      px,py,pz,
-      pos.x,pos.y,pos.z)
-
-    if dist < 30 then
-      local sx = pos.x
-      local sy = pos.y
-      local sz = pos.z + 1.8
-      dxDrawMaterialLine3D(
-        sx-0.5, sy, sz,
-        sx+0.5, sy, sz,
-        img, 1.2,
-        tocolor(255,255,255,255)
-      )
+addEventHandler("onMarkerHit", mk, function(hit, matchDim)
+    if getElementType(hit) == "player" then
+        -- Acción cuando el jugador entra
+        outputChatBox(
+            "Llegaste a ${lbl}!",
+            hit, 255, 220, 60, true
+        )
     end
-  end
-)`;
+end)`;
 
-  document.getElementById('metaBox').textContent =
-`<meta>
-  <script src="client.lua"
-    type="client"/>
-  <file src="icons/icon_${safe}.png"/>
+            document.getElementById('cMeta').textContent =
+                `<meta>
+    <info author="TuNick" version="1.0"
+          description="${lbl} marker" />
+    <file src="icons/${name}.png" />
+    <script src="client.lua" type="client" />
+    <script src="server.lua" type="server" />
 </meta>`;
-}
+        }
 
-function downloadPNG() {
-  const c = document.getElementById('previewCanvas');
-  const a = document.createElement('a');
-  const label = document.getElementById('labelText').value || 'icon';
-  const safe = label.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '') || 'icon';
-  a.download = `icon_${safe}.png`;
-  a.href = c.toDataURL('image/png');
-  a.click();
-}
+        // ══════════════════════════════════════════
+        //  EXPORT
+        // ══════════════════════════════════════════
+        function renderIconAt(size) {
+            const c = document.createElement('canvas');
+            c.width = size; c.height = size;
+            const ctx = c.getContext('2d');
+            ctx.clearRect(0, 0, size, size);
+            const c1 = document.getElementById('color1').value;
+            const c2 = document.getElementById('color2').value;
+            const ic = document.getElementById('iconColor').value;
+            const gr = document.getElementById('useGradient').checked;
+            const gl = document.getElementById('useGlow').checked;
+            const bw = parseInt(document.getElementById('borderW').value) * (size / 256);
+            const sc = parseInt(document.getElementById('iconScale').value);
+            const oy = parseInt(document.getElementById('offsetY').value);
+            const lb = document.getElementById('labelText').value;
+            drawShape(ctx, size, curShape, c1, c2, gr, bw, ic, gl);
+            drawEmoji(ctx, size, curIcon.e, sc, oy, !!lb);
+            drawLabel(ctx, size, lb, ic, oy);
+            return c;
+        }
 
-function downloadAll() {
-  const sizes = [200, 128, 64];
-  sizes.forEach((s, i) => {
-    const c = document.createElement('canvas');
-    c.width = s; c.height = s;
-    renderToCanvas(c);
-    const a = document.createElement('a');
-    const label = document.getElementById('labelText').value || 'icon';
-    const safe = label.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '') || 'icon';
-    a.download = `icon_${safe}_${s}.png`;
-    a.href = c.toDataURL('image/png');
-    setTimeout(() => a.click(), i * 300);
-  });
-}
+        function dlMain() {
+            const w = parseInt(document.getElementById('dlW').value) || 256;
+            const h = parseInt(document.getElementById('dlH').value) || 256;
+            const c = renderIconAt(Math.max(w, h));
+            const out = document.createElement('canvas'); out.width = w; out.height = h;
+            out.getContext('2d').drawImage(c, 0, 0, w, h);
+            const nm = (document.getElementById('labelText').value || 'icon').toLowerCase().replace(/\s+/g, '_');
+            const a = document.createElement('a'); a.download = `mta_icon_${nm}_${w}x${h}.png`; a.href = out.toDataURL('image/png'); a.click();
+        }
 
-render();
-</script>
+        function dlPack() {
+            [256, 96, 48].forEach((s, i) => {
+                setTimeout(() => {
+                    const c = renderIconAt(s);
+                    const a = document.createElement('a'); a.download = `icon_${s}px.png`; a.href = c.toDataURL(); a.click();
+                }, i * 350);
+            });
+        }
 
+        function syncDim(t) {
+            if (!document.getElementById('lockAR').checked) return;
+            const w = document.getElementById('dlW'), h = document.getElementById('dlH');
+            if (t === 'w') h.value = w.value; else w.value = h.value;
+        }
+
+        // ══════════════════════════════════════════
+        //  COPY CODE
+        // ══════════════════════════════════════════
+        function copyCode(id) {
+            navigator.clipboard.writeText(document.getElementById(id).textContent).catch(() => { });
+            const btn = document.getElementById(id).previousElementSibling.querySelector('.copy-btn');
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.5"><polyline points="20 6 9 17 4 12"/></svg> Copiado';
+            btn.style.color = '#4ade80';
+            setTimeout(() => { btn.innerHTML = orig; btn.style.color = ''; }, 2000);
+        }
+
+        // ══════════════════════════════════════════
+        //  RESET
+        // ══════════════════════════════════════════
+        function resetAll() {
+            document.getElementById('color1').value = '#1a6fd4';
+            document.getElementById('color2').value = '#7c3aed';
+            document.getElementById('iconColor').value = '#ffffff';
+            document.getElementById('iconScale').value = 60; sv('vScale', '60%');
+            document.getElementById('borderW').value = 4; sv('vBorder', '4px');
+            document.getElementById('offsetY').value = 0; sv('vOffY', '0px');
+            document.getElementById('labelText').value = '';
+            document.getElementById('ringColor').value = '#ffffff';
+            document.getElementById('ringSize').value = 130; sv('vRingSize', '1.3m');
+            document.getElementById('ringAlpha').value = 160; sv('vRingAlpha', '160');
+            document.getElementById('ringThick').value = 10; sv('vRingThick', '10px');
+            document.getElementById('useGradient').checked = true;
+            document.getElementById('useGlow').checked = true;
+            curIcon = ICONS_LUCIDE[0]; curShape = 'shield'; currentCat = 'lucide';
+            buildIconGrid(); buildShapeGrid();
+            updateCode();
+        }
+
+        // ══════════════════════════════════════════
+        //  HELPERS
+        // ══════════════════════════════════════════
+        function hexRgb(hex) {
+            const r = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return r ? { r: parseInt(r[1], 16), g: parseInt(r[2], 16), b: parseInt(r[3], 16) } : { r: 255, g: 255, b: 255 };
+        }
+        function render() { updateCode(); }
+
+        // ══════════════════════════════════════════
+        //  ANIMATION LOOP
+        // ══════════════════════════════════════════
+        function loop() {
+            renderScene();
+            requestAnimationFrame(loop);
+        }
+
+        init();
+    </script>
 </body>
+
 </html>
